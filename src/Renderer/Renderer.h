@@ -1,7 +1,7 @@
 #pragma once
 
 #include "RenderCommand.h"
-//#include <glm/glm.hpp>
+#include <glm/glm.hpp>
 
 class Renderer
 {

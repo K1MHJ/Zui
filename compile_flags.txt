@@ -3,6 +3,11 @@
 -I/usr/local/include/
 -I./vendor/
 -I./src/
+-I./src/Core
+-I./src/OpenGL
+-I./src/Renderer
+-I./src/Windows
+-I./src/Debug
 -I./vendor/glad/include
 -I./vendor/spdlog/include
 -std=c++20

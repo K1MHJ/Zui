@@ -1,6 +1,12 @@
 #pragma once
 
-#include "PlatformDetection.h"
+#include "Core/PlatformDetection.h"
+
+#ifdef PLATFORM_WINDOWS
+	#ifndef NOMINMAX
+		#define NOMINMAX
+	#endif
+#endif
 
 #include <iostream>
 #include <memory>
@@ -14,6 +20,7 @@
 #include <vector>
 #include <unordered_map>
 #include <unordered_set>
-#include <filesystem>
 
-#include "Base.h"
+#include "Core/Base.h"
+#include "Core/Log.h"
+#include "Debug/Instrumentor.h"

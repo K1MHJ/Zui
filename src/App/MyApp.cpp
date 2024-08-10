@@ -1,4 +1,5 @@
 #include "EntryPoint.h"
+#include "Application.h"
 
 class MyApp : public Application
 {
@@ -7,7 +8,6 @@ public:
   : Application(specification)
   {
   }
-
   ~MyApp()
   {
   }

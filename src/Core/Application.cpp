@@ -1,19 +1,23 @@
 #include "pch.h"
-#include "Application.h"
-//#include "Renderer.h"
+#include "Core/Application.h"
+#include "Core/Log.h"
+#include "Renderer/Renderer.h"
+#include "Utils/PlatformUtils.h"
 
 Application* Application::s_Instance = nullptr;
 
 Application::Application(const ApplicationSpecification& specification)
 : m_Specification(specification)
 {
+  PROFILE_FUNCTION();
+  CORE_ASSERT(!s_Instance, "Application already exists!"); 
+
   s_Instance = this;
 
   if(!m_Specification.WorkingDirectory.empty())
     std::filesystem::current_path(m_Specification.WorkingDirectory);
   
   m_Window = Window::Create(WindowProps(m_Specification.Name));
-  
   //Renderer::Init();
 }
 
