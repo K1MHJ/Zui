@@ -9,9 +9,14 @@ CXXFLAGS := $(CFLAGS) -std=c++20 -xc++
 SRCDIR := ./src
 OBJDIR := ./obj
 BINDIR := ./bin
-INCLUDE := -I/opt/homebrew/include/ -I/usr/include/ -I/usr/local/include/ -I./vendor/ -I./vendor/glad/include/
-INCLUDE := $(INCLUDE) -I./vendor/spdlog/include -I/opt/homebrew/Cellar/glm/1.0.1/include/
-INCLUDE := $(INCLUDE) -I./src -I./src/App -I./src/Core -I./src/Debug -I./src/OpenGL -I./src/Renderer -I./src/Utils -I./src/Windows
+INCLUDE := -I/opt/homebrew/include/ -I/usr/include/ -I/usr/local/include/ 
+INCLUDE := $(INCLUDE) -I./vendor/ -I./vendor/glad/include/
+INCLUDE := $(INCLUDE) -I./vendor/spdlog/include/
+INCLUDE := $(INCLUDE) -I./vendor/imgui/ -I./vendor/ImGuizmo/
+INCLUDE := $(INCLUDE) -I/opt/homebrew/Cellar/glm/1.0.1/include/
+INCLUDE := $(INCLUDE) -I./src -I./src/App -I./src/Core -I./src/Debug 
+INCLUDE := $(INCLUDE) -I./src/OpenGL -I./src/Renderer -I./src/Utils -I./src/MacOs -I./src/Events -I./src/UI
+
 LIBS := -lm
 DEFINES := 
 TARGET := ./bin/ZuiApp

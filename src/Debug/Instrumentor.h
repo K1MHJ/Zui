@@ -184,7 +184,7 @@ constexpr auto CleanupOutputString(const char (&expr)[N],
 }
 } // namespace InstrumentorUtils
 
-#define PROFILE 0
+#define PROFILE 1
 #if PROFILE
   // Resolve which function signature macro will be used. Note that this only
 // is resolved when the (pre)compiler starts, so the syntax highlighting
@@ -209,16 +209,13 @@ constexpr auto CleanupOutputString(const char (&expr)[N],
 #define FUNC_SIG "FUNC_SIG unknown!"
 #endif
 
-#define PROFILE_BEGIN_SESSION(name, filepath)                                  \
-  ::Hazel::Instrumentor::Get().BeginSession(name, filepath)
-#define PROFILE_END_SESSION() ::Hazel::Instrumentor::Get().EndSession()
-#define PROFILE_SCOPE_LINE2(name, line)                                        \
-  constexpr auto fixedName##line =                                             \
-      ::Hazel::InstrumentorUtils::CleanupOutputString(name, "__cdecl ");       \
-  ::Hazel::InstrumentationTimer timer##line(fixedName##line.Data)
-#define PROFILE_SCOPE_LINE(name, line) PROFILE_SCOPE_LINE2(name, line)
-#define PROFILE_SCOPE(name) PROFILE_SCOPE_LINE(name, __LINE__)
-#define PROFILE_FUNCTION() PROFILE_SCOPE(FUNC_SIG)
+	#define PROFILE_BEGIN_SESSION(name, filepath) ::Instrumentor::Get().BeginSession(name, filepath)
+	#define PROFILE_END_SESSION() ::Instrumentor::Get().EndSession()
+	#define PROFILE_SCOPE_LINE2(name, line) constexpr auto fixedName##line = ::InstrumentorUtils::CleanupOutputString(name, "__cdecl ");\
+											   ::InstrumentationTimer timer##line(fixedName##line.Data)
+	#define PROFILE_SCOPE_LINE(name, line) PROFILE_SCOPE_LINE2(name, line)
+	#define PROFILE_SCOPE(name) PROFILE_SCOPE_LINE(name, __LINE__)
+	#define PROFILE_FUNCTION() PROFILE_SCOPE(FUNC_SIG)
 #else
 #define PROFILE_BEGIN_SESSION(name, filepath)
 #define PROFILE_END_SESSION()

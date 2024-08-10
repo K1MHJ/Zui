@@ -1,5 +1,6 @@
-#include "EntryPoint.h"
-#include "Application.h"
+#include "Zui.h"
+#include <Core/EntryPoint.h>
+#include "MyLayer.h"
 
 class MyApp : public Application
 {
@@ -7,6 +8,7 @@ public:
   MyApp(const ApplicationSpecification& specification)
   : Application(specification)
   {
+    PushLayer(new MyLayer);
   }
   ~MyApp()
   {
