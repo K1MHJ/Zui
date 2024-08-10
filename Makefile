@@ -5,7 +5,7 @@ LD := clang++
 AR := ar
 RANLIB :=
 CFLAGS := -g -O0 -Wall -MP -MMD -DGL_SILENCE_DEPRECATION
-CXXFLAGS := $(CFLAGS) -std=c++20 -xc++
+CXXFLAGS := $(CFLAGS) -std=c++20 -xc++ -arch arm64
 SRCDIR := ./src
 OBJDIR := ./obj
 BINDIR := ./bin
@@ -27,11 +27,21 @@ PCH_OUT := $(OBJDIR)/pch.gch
 PCH_SRC := $(SRCDIR)/pch.cpp
 PCH_HEADERS := $(SRCDIR)/pch.h
 
-SRC := Core/Application.cpp App/MyApp.cpp pch.cpp 
-SRC := $(SRC) ./Core/Window.cpp ./Core/Log.cpp ./Core/Log.cpp
+SRC :=
+SRC := $(SRC) vendor/stb_image/stb_image.cpp 
+SRC := $(SRC) vendor/imgui/imgui.cpp 
+SRC := $(SRC) vendor/imgui/imgui_draw.cpp 
+SRC := $(SRC) vendor/imgui/imgui_tables.cpp vendor/imgui/imgui_widgets.cpp 
+# SRC := $(SRC) vendor/imgui/backends/imgui_impl_glfw.cpp 
+# SRC := $(SRC) vendor/imgui/backends/imgui_impl_opengl3.cpp
+SRC := $(SRC) vendor/ImGuizmo/ImGuizmo.cpp vendor/ImGuizmo/GraphEditor.cpp vendor/ImGuizmo/ImCurveEdit.cpp vendor/ImGuizmo/ImGradient.cpp vendor/ImGuizmo/ImSequencer.cpp
+
+SRC := $(SRC) App/MyApp.cpp App/MyLayer.cpp
+SRC := $(SRC) ./Core/Application.cpp ./Core/Layer.cpp ./Core/LayerStack.cpp ./Core/Log.cpp ./Core/Window.cpp
+SRC := $(SRC) ./ImGui/ImGuiBuild.cpp ./ImGui/ImGuiLayer.cpp
+SRC := $(SRC) ./MacOs/MacOsWindow.cpp ./MacOs/MacOsInput.cpp ./MacOs/MacOsPlatformUtils.cpp
 SRC := $(SRC) ./OpenGL/OpenGLContext.cpp ./OpenGL/OpenGLRendererAPI.cpp
 SRC := $(SRC) ./Renderer/GraphicsContext.cpp ./Renderer/RenderCommand.cpp ./Renderer/Renderer.cpp ./Renderer/RendererAPI.cpp
-SRC := $(SRC) ./Windows/MacOsWindow.cpp
 SRC := $(SRC)
 
 OBJS  := $(addprefix $(OBJDIR)/, $(SRC:.cpp=.o)) 
@@ -57,6 +67,11 @@ $(OBJDIR)/gl.o: ./vendor/glad/src/gl.c
 	$(CXX) $(CXXFLAGS) $(INCLUDE) -o $@ -c $<
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.cpp $(PCH_OUT)
+	# @[ -d $(OBJDIR) ]
+	mkdir -p $(@D)
+	$(CXX) $(CXXFLAGS) $(INCLUDE) -o $@ -c $< -include $(PCH_HEADERS)
+
+$(OBJDIR)/%.o: %.cpp $(PCH_OUT)
 	# @[ -d $(OBJDIR) ]
 	mkdir -p $(@D)
 	$(CXX) $(CXXFLAGS) $(INCLUDE) -o $@ -c $< -include $(PCH_HEADERS)

@@ -8,7 +8,7 @@ public:
   MyApp(const ApplicationSpecification& specification)
   : Application(specification)
   {
-    PushLayer(new MyLayer);
+    PushLayer(new MyLayer());
   }
   ~MyApp()
   {

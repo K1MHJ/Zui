@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Debug/Instrumentor.h"
 #include "Core/Base.h"
 
 // Events in Hazel are currently blocking, meaning when an event occurs it
