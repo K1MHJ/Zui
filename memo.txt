@@ -1,0 +1,150 @@
+#include <cstring>
+#include <iostream>
+#define _USE_MATH_DEFINES
+#include <cfloat>
+#include <iomanip>
+#include <math.h>
+#include <memory>
+#include <random>
+#include <vector>
+
+#define _FIND_LINEAR
+#define _FIND_PERIOD
+#define _FIND_AMP
+
+#define PRINTN(x) printf("%s=%d\n",#x, x)
+#define PRINTF(x) printf("%s=%f\n",#x, x)
+
+typedef struct {
+  double period;
+  double amp;
+  double mid;
+  double phase;
+} CurveConf;
+
+typedef struct {
+  double x;
+  double y;
+} stVal;
+CurveConf gConf;
+
+double GetFunc(double x) {
+  return gConf.mid + gConf.amp * cos(x / gConf.period * 2 * M_PI + gConf.phase);
+}
+
+void MakeSample(std::vector<stVal> &val) {
+  std::random_device seed_gen;
+  std::mt19937 engine(seed_gen());
+
+  // 一様実数分布
+  // [-1.0f, 1.0f)の値の範囲で、等確率に実数を生成する
+  std::uniform_real_distribution<float> dist1(-1.0f, 1.0f);
+
+  // 正規分布
+  // 平均1.0f、標準偏差0.5fで分布させる
+  std::normal_distribution<float> dist2(1.0f, 0.5f);
+
+  // 各分布法に基いて乱数を生成
+  float r1 = dist1(engine);
+  float r2 = dist2(engine);
+
+  val.clear();
+  stVal v;
+  for (double i = 0; i < M_PI; i += M_PI / 40) {
+    float r3 = dist1(engine);
+    v.x = i;
+    v.y = GetFunc(i) + r3 * 0;
+    val.push_back(v);
+  }
+}
+
+int main(int argc, char **argv) {
+  gConf.period = M_PI;
+  gConf.amp = 1;
+  gConf.mid = 1;
+  gConf.phase = 0;
+
+  std::vector<stVal> sample;
+  MakeSample(sample);
+  double min_err = DBL_MAX;
+  double sum = 0;
+
+#ifdef _FIND_PERIOD
+  double min_y = DBL_MAX;
+  double max_y = DBL_MIN;
+  for (auto it : sample) {
+    if(min_y > it.y) min_y = it.y;
+    if(max_y < it.y) max_y = it.y;
+  }
+  gConf.amp = (max_y - min_y) / 2;
+  gConf.mid = (max_y + min_y) / 2;
+  gConf.amp *= 0.90;
+
+  double opt_period = 0;
+  for (double i = M_PI / 2; i < M_PI * 2; i += M_PI / 4) {
+    gConf.period = i;
+    sum = 0;
+    for (auto it : sample) {
+      double errY = it.y - GetFunc(it.x);
+      sum += (errY * errY);
+    }
+    if (sum < min_err) {
+      min_err = sum;
+      opt_period = i;
+    }
+  }
+  std::cout << opt_period << std::endl;
+#endif
+
+#ifdef _FIND_AMP
+  double opt_amp = 0;
+  double opt_mid = 0;
+  double min_sam = DBL_MAX;
+  double max_sam = DBL_MIN;
+  for (auto it : sample) {
+    if(min_sam > it.y) min_sam = it.y;
+    if(max_sam < it.y) max_sam = it.y;
+  }
+  PRINTF(max_sam);
+
+  double best_upper;
+  double best_lower;
+  double upper = max_sam;
+  double lower = min_sam;
+  double du,dl;
+
+  best_lower = lower;
+  for (du = 0; du < upper * 0.2 ; du += upper * 0.01) {
+    gConf.amp = (upper - du - lower) / 2;
+    gConf.mid = (upper - du + lower) / 2;
+    sum = 0;
+    for (auto it : sample) {
+      double errY = it.y - GetFunc(it.x);
+      sum += (errY * errY);
+    }
+    if (sum < min_err) {
+      min_err = sum;
+      best_upper = upper + du;
+    }
+  }
+
+  min_err = DBL_MAX;
+  upper = best_upper;
+  for (dl = 0; dl < lower * 0.2 ; dl += lower * 0.01) {
+    gConf.amp = (upper - (lower + dl)) / 2;
+    gConf.mid = (upper + (lower + dl)) / 2;
+    sum = 0;
+    for (auto it : sample) {
+      double errY = it.y - GetFunc(it.x);
+      sum += (errY * errY);
+    }
+    if (sum < min_err) {
+      min_err = sum;
+      best_lower = lower + dl;
+    }
+  }
+  PRINTF(best_lower);
+#endif
+  std::cout << "End" << std::endl;
+  exit(0);
+}
