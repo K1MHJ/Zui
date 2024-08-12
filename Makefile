@@ -29,12 +29,12 @@ PCH_HEADERS := $(SRCDIR)/pch.h
 
 SRC :=
 SRC := $(SRC) vendor/stb_image/stb_image.cpp 
-SRC := $(SRC) vendor/imgui/imgui.cpp 
-SRC := $(SRC) vendor/imgui/imgui_draw.cpp 
-SRC := $(SRC) vendor/imgui/imgui_tables.cpp vendor/imgui/imgui_widgets.cpp 
+# SRC := $(SRC) vendor/imgui/imgui.cpp 
+# SRC := $(SRC) vendor/imgui/imgui_draw.cpp 
+# SRC := $(SRC) vendor/imgui/imgui_tables.cpp vendor/imgui/imgui_widgets.cpp 
 # SRC := $(SRC) vendor/imgui/backends/imgui_impl_glfw.cpp 
 # SRC := $(SRC) vendor/imgui/backends/imgui_impl_opengl3.cpp
-SRC := $(SRC) vendor/ImGuizmo/ImGuizmo.cpp vendor/ImGuizmo/GraphEditor.cpp vendor/ImGuizmo/ImCurveEdit.cpp vendor/ImGuizmo/ImGradient.cpp vendor/ImGuizmo/ImSequencer.cpp
+# SRC := $(SRC) vendor/ImGuizmo/ImGuizmo.cpp vendor/ImGuizmo/GraphEditor.cpp vendor/ImGuizmo/ImCurveEdit.cpp vendor/ImGuizmo/ImGradient.cpp vendor/ImGuizmo/ImSequencer.cpp
 
 SRC := $(SRC) App/MyApp.cpp App/MyLayer.cpp
 SRC := $(SRC) ./Core/Application.cpp ./Core/Layer.cpp ./Core/LayerStack.cpp ./Core/Log.cpp ./Core/Window.cpp
